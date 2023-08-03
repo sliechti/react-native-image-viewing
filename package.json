@@ -35,12 +35,16 @@
     "url": "https://github.com/jobtoday/react-native-image-viewing/issues"
   },
   "homepage": "https://github.com/jobtoday/react-native-image-viewing#readme",
+  "resolutions": { 
+    "@types/react": "18.2.0",
+    "@types/react-native": "0.70.3"
+  },
   "devDependencies": {
     "@babel/runtime": "7.7.4",
-    "@types/react": "16.9.13",
-    "@types/react-native": "0.60.23",
-    "react": "16.12.0",
-    "react-native": "0.61.5",
-    "typescript": "3.7.2"
+    "@types/react": "18.2.0",
+    "@types/react-native": "0.70.3",
+    "react": "18.1.0",
+    "react-native": "^0.70.3",
+    "typescript": "4.9.5"
   }
 }

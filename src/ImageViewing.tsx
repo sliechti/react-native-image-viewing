@@ -13,20 +13,17 @@ import {
   StyleSheet,
   View,
   VirtualizedList,
-  ModalProps,
-  Modal,
 } from "react-native";
 
 import ImageItem from "./components/ImageItem/ImageItem";
 import ImageDefaultHeader from "./components/ImageDefaultHeader";
-import StatusBarManager from "./components/StatusBarManager";
 
 import useAnimatedComponents from "./hooks/useAnimatedComponents";
 import useImageIndexChange from "./hooks/useImageIndexChange";
 import useRequestClose from "./hooks/useRequestClose";
 import { ImageSource } from "./@types";
 
-type Props = {
+export type ImageViewingProps = {
   images: ImageSource[];
   keyExtractor?: (imageSrc: ImageSource, index: number) => string;
   imageIndex: number;
@@ -34,8 +31,6 @@ type Props = {
   onRequestClose: () => void;
   onLongPress?: (image: ImageSource) => void;
   onImageIndexChange?: (imageIndex: number) => void;
-  presentationStyle?: ModalProps["presentationStyle"];
-  animationType?: ModalProps["animationType"];
   backgroundColor?: string;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
@@ -44,7 +39,6 @@ type Props = {
   FooterComponent?: ComponentType<{ imageIndex: number }>;
 };
 
-const DEFAULT_ANIMATION_TYPE = "fade";
 const DEFAULT_BG_COLOR = "#000";
 const DEFAULT_DELAY_LONG_PRESS = 800;
 const SCREEN = Dimensions.get("screen");
@@ -58,15 +52,13 @@ function ImageViewing({
   onRequestClose,
   onLongPress = () => {},
   onImageIndexChange,
-  animationType = DEFAULT_ANIMATION_TYPE,
   backgroundColor = DEFAULT_BG_COLOR,
-  presentationStyle,
   swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   HeaderComponent,
   FooterComponent,
-}: Props) {
+}: ImageViewingProps) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null);
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN);
@@ -92,17 +84,9 @@ function ImageViewing({
     return null;
   }
 
+  console.debug('rendering image viewing');
   return (
-    <Modal
-      transparent={presentationStyle === "overFullScreen"}
-      visible={visible}
-      presentationStyle={presentationStyle}
-      animationType={animationType}
-      onRequestClose={onRequestCloseEnhanced}
-      supportedOrientations={["portrait"]}
-      hardwareAccelerated
-    >
-      <StatusBarManager presentationStyle={presentationStyle} />
+    <>
       <View style={[styles.container, { opacity, backgroundColor }]}>
         <Animated.View style={[styles.header, { transform: headerTransform }]}>
           {typeof HeaderComponent !== "undefined" ? (
@@ -162,7 +146,7 @@ function ImageViewing({
           </Animated.View>
         )}
       </View>
-    </Modal>
+    </>
   );
 }
 
@@ -185,7 +169,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const EnhancedImageViewing = (props: Props) => (
+const EnhancedImageViewing = (props: ImageViewingProps) => (
   <ImageViewing key={props.imageIndex} {...props} />
 );
 
